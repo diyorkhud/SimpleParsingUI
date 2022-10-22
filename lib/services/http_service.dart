@@ -12,7 +12,7 @@ import '../models/user_model.dart';
 
 class Network{
   static String BASE = 'dummy.restapiexample.com';
-  //static Map<String, String> headers = {'Content-type': 'application/json; charset=UTF-8'};
+  static Map<String, String> headers = {'Content-type': 'application/json; charset=UTF-8'};
 
   /* Http Apis */
 
@@ -25,7 +25,7 @@ class Network{
   /* Http Requests */
   static Future<String?> GET(String api, Map<String, String> params) async{
     var uri = Uri.https(BASE, api, params);
-    var response = await get(uri,);
+    var response = await get(uri, headers: headers);
     if(response.statusCode == 200){
       return response.body;
     }

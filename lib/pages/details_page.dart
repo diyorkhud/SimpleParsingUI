@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:parsingdemo/models/empone_model.dart';
@@ -15,25 +14,25 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
 
-   late Employee item;
+  String getname='';
+  String getsalary='';
+  String getage='';
+  late EmpOne empone;
+
+
+   //late Employee item;
 
   void _apiEmpOne(int id){
     Network.GET(Network.API_ONEEMP, Network.paramsEmpty()).then((response) => {
-      print(response),
-      _showResponse(response!),
+      empone = Network.parseEmpOne(response!),
+      setState(() {
+        getname=empone.data.employee_name;
+        getsalary=empone.data.employee_salary.toString();
+        getage=empone.data.employee_age.toString();
+      }),
     });
   }
 
-  void _showResponse(String response) {
-    if (response != null) {
-      EmpOne empOne = Network.parseEmpOne(response);
-      setState(() {
-        item = empOne.data;
-      });
-    } else {
-      print("Try again");
-    }
-  }
 
   @override
   void initState(){
@@ -50,30 +49,21 @@ class _DetailsPageState extends State<DetailsPage> {
           title: const Text("Details Page"),
           centerTitle: true,
         ),
-        body: Container(
-          child: Center(
-            child: Container(child: itemOfOne(item)),
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.only(bottom: 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("$getname($getage)", style: const TextStyle(color: Colors.black, fontSize: 20),),
+                const SizedBox(height: 20,),
+                Text("$getsalary\$", style: const TextStyle(color: Colors.black, fontSize: 18),),
+              ],
+            ),
           ),
         ),
       );
     }
-
-  Widget itemOfOne(Employee emp){
-    return Center(
-      child: Container(
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.only(bottom: 1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("${emp.employee_name}(${emp.employee_age})", style: const TextStyle(color: Colors.black, fontSize: 20),),
-              const SizedBox(height: 20,),
-              Text("${emp.employee_salary}\$", style: const TextStyle(color: Colors.black, fontSize: 18),),
-            ],
-          ),
-        ),
-    );
-  }
-
   }
 
